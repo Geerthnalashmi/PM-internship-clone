@@ -1,0 +1,3182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prime Minister Internship Scheme</title>
+    <style>
+        :root {
+            --primary-orange: #e67e22;
+            --primary-blue: #3498db;
+            --dark-blue: #2c3e50;
+            --light-blue: #5dade2;
+            --green: #27ae60;
+            --red: #e74c3c;
+            --yellow: #f39c12;
+            --teal: #16a085;
+            --gray-50: #f8f9fa;
+            --gray-100: #f1f3f4;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            line-height: 1.5;
+        }
+
+        /* Enhanced Toggle Button Styles for Simple/Detailed View */
+        .view-toggle-btn {
+            background: #f1f3f4; 
+            border: 2px solid #dee2e6; 
+            padding: 8px 16px;
+            border-radius: 20px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            color: #495057; 
+            margin: 0 5px; 
+            transition: all 0.2s;
+        }
+        .view-toggle-btn.active {
+            background-color: var(--primary-orange); 
+            color: white; 
+            border-color: var(--primary-orange);
+        }
+
+        /* Hide detailed info by default in simple view */
+        #recommendations-container.simple-view .detailed-info {
+            display: none;
+        }
+
+        /* Show detailed info when in detailed view */
+        #recommendations-container.detailed-view .detailed-info {
+            display: block;
+        }
+
+        /* AI-Powered Profile Completion Suggestion Pills */
+        .suggestion-pill {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: 1px solid #a5d6a7;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            user-select: none;
+        }
+        .suggestion-pill:hover {
+            background-color: #c8e6c9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-color: #81c784;
+        }
+        .suggestion-pill:active {
+            transform: translateY(0px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Enhanced Themed Recommendation Cards */
+        .recommendation-card-header {
+            border-top: 6px solid var(--primary-orange) !important;
+        }
+        .recommendation-score-box div:first-child {
+            color: var(--primary-orange) !important;
+        }
+
+        .recommendation-section-box {
+            background: #fff3e0 !important;
+            border-left: 6px solid var(--primary-orange) !important;
+        }
+        .recommendation-section-box .section-title {
+            color: #e65100 !important;
+        }
+        .recommendation-section-box .section-content {
+            color: #e65100 !important;
+        }
+
+        .recommendation-apply-btn {
+            background: linear-gradient(135deg, var(--primary-orange), #d35400) !important;
+        }
+        .recommendation-details-btn {
+            background: linear-gradient(135deg, var(--primary-blue), #2980b9) !important;
+        }
+
+        /* NEW: Career Mitra Voice Button Styling */
+        .mitra-voice-btn {
+            background: linear-gradient(135deg, #9c27b0, #673ab7) !important;
+            color: white !important;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .mitra-voice-btn:hover {
+            background: linear-gradient(135deg, #8e24aa, #5e35b1) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(156, 39, 176, 0.3);
+        }
+        .mitra-voice-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Career Mitra Modal Styles */
+        #mitra-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .mitra-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-align: center;
+        }
+
+        .mitra-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .mitra-header h3 {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mitra-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        .mitra-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        #mitra-output {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 150px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .mitra-message {
+            margin-bottom: 15px;
+            text-align: left;
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+
+        .mitra-message.assistant {
+            background: rgba(76, 175, 80, 0.3);
+            border-left: 4px solid #4caf50;
+        }
+
+        .mitra-message.user {
+            background: rgba(33, 150, 243, 0.3);
+            border-left: 4px solid #2196f3;
+        }
+
+        .mitra-listening {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .listening-indicator {
+            width: 20px;
+            height: 20px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .speaking-indicator {
+            width: 20px;
+            height: 20px;
+            background: #ff9800;
+            border-radius: 50%;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        /* Enhanced Matches Found Banner */
+        .matches-found-banner {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--teal) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        .matches-found-banner h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .matches-found-banner p, .matches-found-banner div {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        /* Enhanced Dropdown Styling for Edit Modal */
+        #edit-modal select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-color: var(--gray-50);
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22/%3E%3C/svg%3E');
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: .65em auto;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 16px;
+            color: var(--gray-800);
+            cursor: pointer;
+        }
+        #edit-modal select:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+            outline: none;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--gray-800);
+            color: var(--white);
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 60px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .govt-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .govt-logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .govt-text {
+            font-size: 10px;
+            line-height: 1.2;
+            font-weight: 600;
+        }
+
+        .pm-internship {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 16px;
+        }
+
+        .pm-text {
+            color: var(--primary-orange);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .internship-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .scheme-text {
+            font-size: 12px;
+            color: var(--gray-300);
+            margin-left: 8px;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--white);
+            text-decoration: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-orange);
+        }
+
+        .btn-insurance {
+            background-color: #ffeaa7;
+            color: var(--primary-orange);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .btn-portal {
+            background-color: var(--primary-orange);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--white);
+            border-right: 1px solid var(--gray-200);
+            padding: 16px;
+        }
+
+        .candidate-card {
+            background-color: #fff3e0;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #ffcc80;
+        }
+
+        .candidate-id {
+            font-size: 12px;
+            color: var(--primary-orange);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .candidate-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .candidate-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .candidate-details h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .candidate-age {
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+
+        .profile-progress {
+            margin-top: 12px;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-bottom: 4px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #bbdefb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-blue);
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .location-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 16px 0;
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+
+        .sidebar-menu {
+            margin-bottom: 24px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .menu-item:hover {
+            background-color: var(--gray-50);
+        }
+
+        .menu-item.danger {
+            color: var(--red);
+        }
+
+        .grievance-section {
+            border-top: 1px solid var(--gray-200);
+            padding-top: 16px;
+        }
+
+        .grievance-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .grievance-header img {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+        }
+
+        .grievance-header h4 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-new-grievance {
+            width: 100%;
+            background-color: var(--red);
+            color: var(--white);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+
+        .grievance-status h5 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .status-label {
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+
+        .status-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .status-badge.red {
+            background-color: #ffebee;
+            color: var(--red);
+        }
+
+        .status-badge.green {
+            background-color: #e8f5e8;
+            color: var(--green);
+        }
+
+        .status-badge.yellow {
+            background-color: #fff8e1;
+            color: var(--yellow);
+        }
+
+        .status-badge.blue {
+            background-color: #e3f2fd;
+            color: var(--primary-blue);
+        }
+
+        .status-badge.purple {
+            background-color: #f3e5f5;
+            color: #9c27b0;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            background-color: var(--gray-50);
+        }
+
+        .content-tabs {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab.active {
+            background-color: var(--primary-orange);
+            color: var(--white);
+        }
+
+        .tab:not(.active) {
+            color: var(--gray-500);
+        }
+
+        .tab:not(.active):hover {
+            color: var(--gray-700);
+            background-color: var(--gray-50);
+        }
+
+        .tab.new::after {
+            content: 'NEW';
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background-color: var(--red);
+            color: var(--white);
+            font-size: 8px;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-weight: 600;
+        }
+
+        .content-body {
+            padding: 24px;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .steps-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .step-circle.completed {
+            background-color: var(--primary-orange);
+            color: var(--white);
+        }
+
+        .step-circle.current {
+            background-color: var(--primary-orange);
+            color: var(--white);
+        }
+
+        .step-circle.pending {
+            background-color: var(--gray-200);
+            color: var(--gray-500);
+        }
+
+        .step-label {
+            font-size: 11px;
+            text-align: center;
+            max-width: 80px;
+            line-height: 1.3;
+        }
+
+        .step-label.current {
+            color: var(--primary-orange);
+            font-weight: 600;
+        }
+
+        .step-label.pending {
+            color: var(--gray-500);
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: 16px;
+            height: 2px;
+            background-color: var(--gray-200);
+            z-index: 1;
+        }
+
+        .progress-line-fill {
+            height: 100%;
+            background-color: var(--primary-orange);
+            width: 20%;
+            transition: width 0.3s ease;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .profile-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 24px;
+        }
+
+        .profile-steps {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .profile-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .profile-step-icon.completed {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .profile-step-icon.pending {
+            background-color: var(--gray-200);
+            color: var(--gray-500);
+        }
+
+        .profile-step-text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .profile-step-text.completed {
+            color: var(--primary-blue);
+        }
+
+        .profile-step-text.pending {
+            color: var(--gray-500);
+        }
+
+        .profile-step-connector {
+            width: 24px;
+            height: 2px;
+            background-color: var(--primary-blue);
+        }
+
+        .profile-step-connector.pending {
+            background-color: var(--gray-200);
+        }
+
+        .greeting {
+            margin-bottom: 24px;
+        }
+
+        .greeting h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 8px;
+        }
+
+        .greeting p {
+            font-size: 16px;
+            color: var(--gray-600);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn.orange {
+            background-color: var(--primary-orange);
+            color: var(--white);
+        }
+
+        .action-btn.orange:hover {
+            background-color: #d35400;
+        }
+
+        .action-btn.blue {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .action-btn.blue:hover {
+            background-color: #2980b9;
+        }
+
+        .action-btn.green {
+            background-color: var(--green);
+            color: var(--white);
+        }
+
+        .action-btn.green:hover {
+            background-color: #229954;
+        }
+
+        .action-btn.dark-blue {
+            background-color: var(--dark-blue);
+            color: var(--white);
+        }
+
+        .action-btn.dark-blue:hover {
+            background-color: #1a252f;
+        }
+
+        .action-btn.teal {
+            background-color: var(--teal);
+            color: var(--white);
+            grid-column: span 1;
+        }
+
+        .action-btn.teal:hover {
+            background-color: #138d75;
+        }
+
+        /* Notifications Panel */
+        .notifications-panel {
+            width: 320px;
+            background-color: var(--white);
+            border-left: 1px solid var(--gray-200);
+            position: relative;
+        }
+
+        .notifications-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .notifications-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .notification-bell {
+            width: 20px;
+            height: 20px;
+            background-color: var(--primary-orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 12px;
+        }
+
+        .notifications-list {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--gray-100);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .notification-item:hover {
+            background-color: var(--gray-50);
+        }
+
+        .notification-content {
+            display: flex;
+            gap: 12px;
+        }
+
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon.action {
+            background-color: #fff3e0;
+            color: var(--primary-orange);
+        }
+
+        .notification-icon.info {
+            background-color: #e3f2fd;
+            color: var(--primary-blue);
+        }
+
+        .notification-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .notification-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-800);
+            line-height: 1.3;
+            margin-right: 8px;
+        }
+
+        .new-badge {
+            background-color: var(--red);
+            color: var(--white);
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .notification-text {
+            font-size: 12px;
+            color: var(--gray-600);
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .notification-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .notification-time {
+            font-size: 10px;
+            color: var(--primary-orange);
+        }
+
+        .read-more {
+            font-size: 10px;
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        /* Help Buttons */
+        .help-buttons {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .help-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            color: var(--white);
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .help-btn.dos {
+            background-color: var(--green);
+        }
+
+        .help-btn.donts {
+            background-color: var(--red);
+        }
+
+        .help-btn.need-help {
+            background-color: #c0392b;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--white);
+            border-top: 1px solid var(--gray-200);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bisag-logo {
+            width: 32px;
+            height: 32px;
+            background-color: #e3f2fd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        /* Icons */
+        .icon {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+        }
+
+        .icon-lg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .notifications-panel {
+                width: 280px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+
+            .notifications-panel {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-nav {
+                display: none;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: -260px;
+                top: 60px;
+                height: calc(100vh - 60px);
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .mitra-container {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+    </style>
+</head><body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="menu-btn" onclick="toggleSidebar()">
+                <svg class="icon-lg" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+            </button>
+
+            <div class="govt-logo">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjRkY5ODAwIi8+CjxwYXRoIGQ9Ik0xNiA4TDIwIDEySDEyTDE2IDhaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNOCAxNkwxMiAyMEg0TDggMTZaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNMjQgMTZMMjggMjBIMjBMMjQgMTZaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K" alt="Government Logo">
+                <div class="govt-text">
+                    <div data-translate="header_ministry_1">MINISTRY OF</div>
+                    <div data-translate="header_ministry_2">CORPORATE</div>
+                    <div data-translate="header_ministry_3">AFFAIRS</div>
+                    <div style="font-size: 8px;" data-translate="header_govt">GOVERNMENT OF INDIA</div>
+                </div>
+            </div>
+
+            <div class="pm-internship">
+                <span class="pm-text">PM</span>
+                <span class="internship-text" data-translate="header_internship">Internship</span>
+            </div>
+
+            <span class="scheme-text" data-translate="header_scheme">Prime Minister Internship Scheme</span>
+        </div>
+
+        <nav class="header-nav">
+            <!-- Enhanced Language Switcher -->
+            <select id="language-switcher" onchange="switchLanguage(this.value)" style="background-color: #495057; color: white; border: none; border-radius: 4px; padding: 4px 8px; font-size: 12px; cursor: pointer;">
+                <option value="en">English</option>
+                <option value="hi">हिन्दी (Hindi)</option>
+                <option value="ta">தமிழ் (Tamil)</option>
+            </select>
+
+            <a href="#" class="nav-item">
+                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/>
+                </svg>
+                <span data-translate="nav_faqs">FAQs</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                </svg>
+                <span data-translate="nav_guidelines">Guidelines</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 7V3H2v18h20V7H12zM6 19H4v-2h2v2zm0-4H4v-2h2v2zm0-4H4V9h2v2zm0-4H4V5h2v2zm4 12H8v-2h2v2zm0-4H8v-2h2v2zm0-4H8V9h2v2zm0-4H8V5h2v2zm10 12h-8v-2h2v-2h-2v-2h2v-2h-2V9h8v10zm-2-8h-2v2h2v-2zm0 4h-2v2h2v-2z"/>
+                </svg>
+                <span data-translate="nav_partners">Partner Companies</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                </svg>
+                <span data-translate="nav_manuals">Manuals</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4zM14 13h-3v3H9v-3H6v-2h3V8h2v3h3v2z"/>
+                </svg>
+                <span data-translate="nav_videos">Tutorials/Guidance Videos</span>
+            </a>
+            <a href="#" class="btn-insurance" data-translate="btn_insurance">Apply Insurance</a>
+            <a href="#" class="btn-portal" data-translate="btn_portal">My Bharat Portal</a>
+            <svg class="icon-lg" fill="currentColor" viewBox="0 0 24 24" style="cursor: pointer;">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+        </nav>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar with Full Internationalization -->
+        <aside class="sidebar" id="sidebar">
+            <!-- Candidate Card -->
+            <div class="candidate-card">
+                <div class="candidate-id" data-translate="candidate_id">Candidate ID 291704</div>
+                <div class="candidate-info">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDgiIGhlaWdodD0iNDgiIHZpZXdCb3g9IjAgMCA0OCA0OCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjQiIGN5PSIyNCIgcj0iMjQiIGZpbGw9IiM2NjY2NjYiLz4KPGNpcmNsZSBjeD0iMjQiIGN5PSIxOCIgcj0iOCIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTggMzZjMC04IDgtMTIgMTYtMTJzMTYgNCAxNiAxMiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==" alt="Profile" class="candidate-avatar">
+                    <div class="candidate-details">
+                        <h3 data-translate="candidate_name">Monish R</h3>
+                        <div class="candidate-age" data-translate="candidate_age">22Yrs</div>
+                    </div>
+                </div>
+                <div class="profile-progress">
+                    <div class="progress-text" data-translate="profile_completed">Profile Completed 100%</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Location Info -->
+            <div class="location-info">
+                <span>👤</span>
+                <span data-translate="location_info">The Nilgiris, TAMIL NADU</span>
+            </div>
+
+            <!-- Menu Items with Full Internationalization -->
+            <div class="sidebar-menu">
+                <a href="#" class="menu-item">
+                    <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                    </svg>
+                    <span data-translate="sidebar_view_profile">View Profile / CV</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+                    </svg>
+                    <span data-translate="sidebar_change_pass">Change Password</span>
+                </a>
+                <a href="#" class="menu-item danger">
+                    <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17 7l-1.41-1.41-3.59 3.59-3.59-3.59L7 7l3.59 3.59L7 14.41 8.41 16l3.59-3.59L15.59 16 17 14.41 13.41 11 17 7z"/>
+                    </svg>
+                    <span data-translate="sidebar_sign_out">Sign Out</span>
+                </a>
+            </div>
+
+            <!-- Grievance Section with Full Internationalization -->
+            <div class="grievance-section">
+                <div class="grievance-header">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSIjRkY5ODAwIi8+CjxwYXRoIGQ9Ik0xMiA2TDE2IDEwSDhMMTIgNloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik02IDEyTDEwIDE2SDJMNiAxMloiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0xOCAxMkwyMiAxNkgxNEwxOCAxMloiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=" alt="Support">
+                    <h4 data-translate="grievance_title">File a Grievance</h4>
+                </div>
+
+                <button class="btn-new-grievance" data-translate="btn_new_grievance">New Grievance</button>
+
+                <div class="grievance-status">
+                    <h5 data-translate="grievance_status_title">Grievance Status</h5>
+                    <div class="status-item">
+                        <span class="status-label" data-translate="status_pending">Pending</span>
+                        <span class="status-badge red">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label" data-translate="status_disposed">Disposed</span>
+                        <span class="status-badge green">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label" data-translate="status_clarification">Clarification Asked</span>
+                        <span class="status-badge yellow">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label" data-translate="status_documents">Document(s) Asked</span>
+                        <span class="status-badge blue">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label" data-translate="status_interim">Interim Reply</span>
+                        <span class="status-badge purple">0</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content with Full Internationalization -->
+        <main class="main-content">
+            <!-- Content Tabs with Full Translation Support -->
+            <div class="content-tabs">
+                <div class="tab active" onclick="switchTab('current-status')" data-translate="tab_status">My Current Status</div>
+                <div class="tab" onclick="switchTab('internship-opportunities')" data-translate="tab_opportunities">Internship Opportunities</div>
+                <div class="tab" onclick="switchTab('my-internship')" data-translate="tab_my_internship">My Internship</div>
+                <div class="tab" onclick="switchTab('news-events')" data-translate="tab_news">News & Events</div>
+                <div class="tab new" onclick="switchTab('refer-friend')" data-translate="tab_refer">Refer A Friend</div>
+            </div>
+
+            <div class="content-body">
+                <!-- My Current Status Tab Content -->
+                <div id="current-status" class="tab-content active">
+                    <!-- Progress Steps -->
+                    <div class="progress-steps">
+                        <div class="steps-container">
+                            <div class="progress-line">
+                                <div class="progress-line-fill"></div>
+                            </div>
+
+                            <div class="step">
+                                <div class="step-circle completed">✓</div>
+                                <div class="step-label" data-translate="step_registration">Registration</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle current">✓</div>
+                                <div class="step-label current" data-translate="step_profile">Profile</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle pending">3</div>
+                                <div class="step-label pending" data-translate="step_applications">My Applications</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle pending">4</div>
+                                <div class="step-label pending" data-translate="step_offer">Offer Accepted</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle pending">5</div>
+                                <div class="step-label pending" data-translate="step_started">Internship Started</div>
+                            </div>
+                            <div class="step">
+                                <div class="step-circle pending">6</div>
+                                <div class="step-label pending" data-translate="step_completed">Internship Completed</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Section with Full Internationalization -->
+                    <div class="profile-section">
+                        <h1 class="profile-title" data-translate="profile_title">Candidate Profile</h1>
+
+                        <!-- Profile Steps with Translation -->
+                        <div class="profile-steps">
+                            <div class="profile-step">
+                                <div class="profile-step-icon completed">✓</div>
+                                <span class="profile-step-text completed" data-translate="profile_step_kyc">e-KYC</span>
+                            </div>
+                            <div class="profile-step-connector"></div>
+                            <div class="profile-step">
+                                <div class="profile-step-icon completed">✓</div>
+                                <span class="profile-step-text completed" data-translate="profile_step_personal">Personal Details</span>
+                            </div>
+                            <div class="profile-step-connector"></div>
+                            <div class="profile-step">
+                                <div class="profile-step-icon completed">✓</div>
+                                <span class="profile-step-text completed" data-translate="profile_step_contact">Contact Details</span>
+                            </div>
+                            <div class="profile-step-connector"></div>
+                            <div class="profile-step">
+                                <div class="profile-step-icon completed">✓</div>
+                                <span class="profile-step-text completed" data-translate="profile_step_education">Education Details</span>
+                            </div>
+                            <div class="profile-step-connector"></div>
+                            <div class="profile-step">
+                                <div class="profile-step-icon completed">✓</div>
+                                <span class="profile-step-text completed" data-translate="profile_step_bank">Bank Details</span>
+                            </div>
+                            <div class="profile-step-connector"></div>
+                            <div class="profile-step">
+                                <div class="profile-step-icon completed">✓</div>
+                                <span class="profile-step-text completed" data-translate="profile_step_skills">Skills & Languages</span>
+                            </div>
+                        </div>
+
+                        <!-- Greeting with Translation Support -->
+                        <div class="greeting">
+                            <h2 data-translate="greeting_user">Hi, Monish R</h2>
+                            <p data-translate="profile_success">You have successfully completed your profile. 🎉</p>
+                        </div>
+
+                        <!-- Action Buttons with Full Translation Support -->
+                        <div class="action-buttons">
+                            <button class="action-btn orange" onclick="openEditModal()" data-translate="edit_button">
+                                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                </svg>
+                                Edit
+                            </button>
+                            <button class="action-btn blue" data-translate="preview_button">
+                                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                </svg>
+                                Preview
+                            </button>
+                            <button class="action-btn green" onclick="applyForInternship()" data-translate="apply_button">
+                                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                                </svg>
+                                Apply for Internship
+                            </button>
+                            <button class="action-btn dark-blue" data-translate="check_aadhaar_button">
+                                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+                                </svg>
+                                Check Aadhaar Seeding Status
+                            </button>
+                            <button class="action-btn teal" data-translate="aadhaar_seeding_button">
+                                <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h8c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                                </svg>
+                                Click here for Aadhaar Seeding
+                            </button>
+                        </div>
+
+                        <!-- Loading Container -->
+                        <div id="loading-container" style="display: none; text-align: center; padding: 40px;">
+                            <div style="width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-orange); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+                            <div style="font-size: 18px; color: var(--gray-600); margin-bottom: 10px;" data-translate="ai_analyzing">🤖 ULTIMATE AI is analyzing your profile...</div>
+                            <div style="color: var(--gray-500); font-size: 14px;" data-translate="ai_finding">Finding championship internship matches for you</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Internship Opportunities Tab Content -->
+                <div id="internship-opportunities" class="tab-content">
+                    <div style="background: white; border-radius: 8px; padding: 30px;">
+                        <h1 style="font-size: 28px; font-weight: 700; color: var(--primary-blue); margin-bottom: 20px; text-align: center;" data-translate="recommendations_title">
+                            🎯 AI-Powered Internship Recommendations
+                        </h1>
+
+                        <!-- Enhanced Simple/Detailed View Toggle -->
+                        <div style="text-align: center; margin-bottom: 20px; font-family: sans-serif;">
+                            <button id="simple-view-btn" class="view-toggle-btn active" data-translate="simple_view_btn">Simple View</button>
+                            <button id="detailed-view-btn" class="view-toggle-btn" data-translate="detailed_view_btn">Detailed View</button>
+                        </div>
+
+                        <div id="recommendations-container">
+                            <!-- AI Recommendations will be populated here -->
+                            <div style="text-align: center; padding: 60px; color: var(--gray-500);">
+                                <div style="font-size: 48px; margin-bottom: 20px;">🚀</div>
+                                <h3 style="margin-bottom: 10px;" data-translate="no_recommendations_title">No Recommendations Yet</h3>
+                                <p data-translate="no_recommendations_text">Click "Apply for Internship" in the "My Current Status" tab to get personalized AI recommendations.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Tab Contents with Translation Support -->
+                <div id="my-internship" class="tab-content">
+                    <div style="background: white; border-radius: 8px; padding: 30px; text-align: center;">
+                        <h2 style="color: var(--primary-blue); margin-bottom: 20px;" data-translate="my_internship_title">My Internship</h2>
+                        <div style="color: var(--gray-500); padding: 40px;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">📋</div>
+                            <p data-translate="my_internship_text">Track your current internship progress here once you join an internship.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="news-events" class="tab-content">
+                    <div style="background: white; border-radius: 8px; padding: 30px; text-align: center;">
+                        <h2 style="color: var(--primary-blue); margin-bottom: 20px;" data-translate="news_events_title">News & Events</h2>
+                        <div style="color: var(--gray-500); padding: 40px;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">📰</div>
+                            <p data-translate="news_events_text">Stay updated with the latest news and events related to PM Internship Scheme.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="refer-friend" class="tab-content">
+                    <div style="background: white; border-radius: 8px; padding: 30px; text-align: center;">
+                        <h2 style="color: var(--primary-blue); margin-bottom: 20px;" data-translate="refer_friend_title">Refer A Friend</h2>
+                        <div style="color: var(--gray-500); padding: 40px;">
+                            <div style="font-size: 48px; margin-bottom: 20px;">👥</div>
+                            <p data-translate="refer_friend_text">Invite your friends to join the PM Internship Scheme and help them kickstart their careers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- Notifications Panel with Full Translation Support -->
+        <aside class="notifications-panel">
+            <div class="notifications-header">
+                <div class="notifications-title">
+                    <span data-translate="notifications_title">Notifications</span>
+                    <div class="notification-bell">🔔</div>
+                </div>
+            </div>
+
+            <div class="notifications-list">
+                <div class="notification-item">
+                    <div class="notification-content">
+                        <div class="notification-icon action">⚠️</div>
+                        <div class="notification-body">
+                            <div class="notification-header">
+                                <div class="notification-title" data-translate="notification_action_title">Action Required - How to Join after Accepting Your PM Inter...</div>
+                                <span class="new-badge" data-translate="badge_new">New</span>
+                            </div>
+                            <div class="notification-text" data-translate="notification_action_text">How to Join, after you have accepted your offer letter: 1. ...</div>
+                            <div class="notification-footer">
+                                <span class="notification-time">June 2, 2025 at 14:45</span>
+                                <a href="#" class="read-more" data-translate="read_more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-content">
+                        <div class="notification-icon action">⚠️</div>
+                        <div class="notification-body">
+                            <div class="notification-header">
+                                <div class="notification-title" data-translate="notification_accept_title">Action Required - How to Accept Your PM Internship Offer</div>
+                            </div>
+                            <div class="notification-text" data-translate="notification_accept_text">Dear Candidate, To accept your internship offer, please fol...</div>
+                            <div class="notification-footer">
+                                <span class="notification-time">June 2, 2025 at 14:42</span>
+                                <a href="#" class="read-more" data-translate="read_more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notification-item">
+                    <div class="notification-content">
+                        <div class="notification-icon info">ℹ️</div>
+                        <div class="notification-body">
+                            <div class="notification-header">
+                                <div class="notification-title" data-translate="notification_aadhaar_title">Now check the status of your Aadhaar-seeded bank account dir...</div>
+                            </div>
+                            <div class="notification-text" data-translate="notification_aadhaar_text">Dear Candidate, You can now</div>
+                            <div class="notification-footer">
+                                <span class="notification-time"></span>
+                                <a href="#" class="read-more" data-translate="read_more">Read More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Buttons with Translation Support -->
+            <div class="help-buttons">
+                <button class="help-btn dos" data-translate="help_dos">Do's ✓</button>
+                <button class="help-btn donts" data-translate="help_donts">Don'ts ✗</button>
+                <button class="help-btn need-help" data-translate="help_need">NEED HELP?</button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer with Full Translation Support -->
+    <footer class="footer">
+        <div class="footer-left">
+            <span data-translate="footer_copyright">© PM Internship Scheme, MCA. All Rights Reserved.</span>
+        </div>
+        <div class="footer-right">
+            <span data-translate="footer_collaboration">Technical collaboration with</span>
+            <span style="color: var(--primary-blue); font-weight: 600;">BISAG-N</span>
+            <div class="bisag-logo">B</div>
+        </div>
+    </footer>
+
+    <!-- Enhanced Edit Modal with AI-Powered Profile Completion and Enhanced Styling -->
+    <div id="edit-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 12px; max-width: 1000px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px 30px; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="font-size: 24px; font-weight: bold;" data-translate="edit_modal_title">✏️ Edit Profile - ULTIMATE AI ENGINE with Smart Suggestions</h2>
+                <button onclick="closeEditModal()" style="background: rgba(255,255,255,0.2); border: none; color: white; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center;">&times;</button>
+            </div>
+            <div style="padding: 30px;">
+                <!-- Skills Section with AI-Powered Profile Completion Suggestions -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #333; display: flex; align-items: center; gap: 10px;">
+                        <span>🎯</span> 
+                        <span data-translate="edit_skills_title">My Skill(s) *</span>
+                        <span style="background: linear-gradient(45deg, #4caf50, #8bc34a); color: white; font-size: 10px; padding: 2px 6px; border-radius: 8px; font-weight: 600;" data-translate="ai_powered_badge">AI POWERED</span>
+                    </h3>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <select id="skill-dropdown" style="flex: 1; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;">
+                            <option value="" data-translate="skill_select_placeholder">Select a skill to add...</option>
+                            <!-- Skills will be populated by JavaScript -->
+                        </select>
+                        <button onclick="addSkillFromDropdown()" style="background: #28a745; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;" data-translate="add_skill_btn">Add Skill</button>
+                    </div>
+                    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                        <input type="text" id="skill-input" style="flex: 1; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px;" data-translate="skill_custom_placeholder">
+                        <button onclick="addCustomSkill()" style="background: #17a2b8; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;" data-translate="add_custom_btn">Add Custom</button>
+                    </div>
+                    <div id="skills-list" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+                        <!-- Skills will be populated here -->
+                    </div>
+
+                    <!-- AI-Powered Profile Completion Suggestions Container -->
+                    <div id="skill-suggestions-container" style="margin-top: 20px; display: none;">
+                        <h4 style="font-size: 16px; font-weight: 600; color: #555; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 18px;">💡</span> 
+                            <span data-translate="suggestions_title">People with this skill also add:</span>
+                        </h4>
+                        <div id="suggestion-pills" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            <!-- Suggestion pills will be dynamically generated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Section with Enhanced Dropdown -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #333; display: flex; align-items: center; gap: 10px;">
+                        <span>📍</span> 
+                        <span data-translate="edit_location_title">Location & Preferences</span>
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                        <div>
+                            <label style="font-weight: 600; margin-bottom: 8px; color: #333; display: block;" data-translate="preferred_location_label">Preferred Location</label>
+                            <select id="location-dropdown" style="padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; width: 100%;">
+                                <!-- Locations will be populated by JavaScript -->
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-weight: 600; margin-bottom: 8px; color: #333; display: block;" data-translate="state_label">State</label>
+                            <select id="state-dropdown" style="padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; width: 100%;">
+                                <!-- States will be populated by JavaScript -->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sector Section with Enhanced Dropdown -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #333; display: flex; align-items: center; gap: 10px;">
+                        <span>🏭</span> 
+                        <span data-translate="edit_sector_title">Sector Interests</span>
+                    </h3>
+                    <div>
+                        <label style="font-weight: 600; margin-bottom: 8px; color: #333; display: block;" data-translate="sector_select_label">Select Sectors (Multiple allowed)</label>
+                        <select id="sector-dropdown" multiple style="padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; width: 100%; min-height: 120px;">
+                            <!-- Sectors will be populated by JavaScript -->
+                        </select>
+                        <div style="font-size: 12px; color: #666; margin-top: 5px;" data-translate="sector_instruction">Hold Ctrl (Windows) or Cmd (Mac) to select multiple sectors</div>
+                    </div>
+                </div>
+
+                <!-- Languages and Experience with Translation -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #333; display: flex; align-items: center; gap: 10px;">
+                        <span>🗣️</span> 
+                        <span data-translate="edit_languages_title">Languages, Certifications and Experience</span>
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                        <div>
+                            <label style="font-weight: 600; margin-bottom: 8px; color: #333; display: block;" data-translate="languages_label">Languages Known</label>
+                            <select id="languages-select" multiple style="padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; width: 100%; min-height: 100px;">
+                                <option value="Tamil" selected data-translate="lang_tamil">Tamil</option>
+                                <option value="English" selected data-translate="lang_english">English</option>
+                                <option value="Hindi" data-translate="lang_hindi">Hindi</option>
+                                <option value="Telugu" data-translate="lang_telugu">Telugu</option>
+                                <option value="Kannada" data-translate="lang_kannada">Kannada</option>
+                                <option value="Malayalam" data-translate="lang_malayalam">Malayalam</option>
+                                <option value="Bengali" data-translate="lang_bengali">Bengali</option>
+                                <option value="Marathi" data-translate="lang_marathi">Marathi</option>
+                                <option value="Gujarati" data-translate="lang_gujarati">Gujarati</option>
+                                <option value="Punjabi" data-translate="lang_punjabi">Punjabi</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-weight: 600; margin-bottom: 8px; color: #333; display: block;" data-translate="experience_label">Past Experience</label>
+                            <textarea id="experience-input" style="padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; width: 100%; min-height: 100px; resize: vertical;" data-translate="experience_placeholder"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Education and Preferences with Translation -->
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #333; display: flex; align-items: center; gap: 10px;">
+                        <span>🎓</span> 
+                        <span data-translate="edit_education_title">Education & Career Preferences</span>
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                        <div>
+                            <label style="font-weight: 600; margin-bottom: 8px; color: #333; display: block;" data-translate="education_label">Education Level</label>
+                            <select id="education-select" style="padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; width: 100%;">
+                                <option value="12th" data-translate="edu_12th">12th Pass</option>
+                                <option value="diploma" data-translate="edu_diploma">Diploma</option>
+                                <option value="graduate" selected data-translate="edu_graduate">Graduate</option>
+                                <option value="postgraduate" data-translate="edu_postgraduate">Post Graduate</option>
+                                <option value="phd" data-translate="edu_phd">PhD</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-weight: 600; margin-bottom: 8px; color: #333; display: block;" data-translate="work_mode_label">Preferred Work Mode</label>
+                            <select id="work-mode-select" style="padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; width: 100%;">
+                                <option value="onsite" data-translate="work_onsite">On-site</option>
+                                <option value="remote" data-translate="work_remote">Remote</option>
+                                <option value="hybrid" selected data-translate="work_hybrid">Hybrid</option>
+                                <option value="flexible" data-translate="work_flexible">Flexible</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-weight: 600; margin-bottom: 8px; color: #333; display: block;" data-translate="duration_label">Internship Duration Preference</label>
+                            <select id="duration-select" style="padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 16px; width: 100%;">
+                                <option value="1-3" data-translate="duration_1_3">1-3 months</option>
+                                <option value="3-6" selected data-translate="duration_3_6">3-6 months</option>
+                                <option value="6-12" data-translate="duration_6_12">6-12 months</option>
+                                <option value="flexible" data-translate="duration_flexible">Flexible</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="background: #f8f9fa; padding: 20px 30px; display: flex; justify-content: flex-end; gap: 15px;">
+                <button onclick="closeEditModal()" style="padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; background: #6c757d; color: white;" data-translate="cancel_btn">Cancel</button>
+                <button onclick="saveProfile()" style="padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; background: #3498db; color: white;" data-translate="save_btn">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Career Mitra Modal for Voice-Powered Assistant -->
+    <div id="mitra-modal">
+        <div class="mitra-container">
+            <div class="mitra-header">
+                <h3>🎙️ Career Mitra</h3>
+                <button class="mitra-close" onclick="closeMitra()">&times;</button>
+            </div>
+
+            <div id="mitra-output">
+                <!-- Conversation messages will appear here -->
+            </div>
+
+            <div id="mitra-status" class="mitra-listening" style="display: none;">
+                <div class="listening-indicator"></div>
+                <span id="mitra-status-text">Listening...</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🏆 ULTIMATE PM INTERNSHIP AI ENGINE - COMPLETE INTERNATIONALIZATION + CAREER MITRA
+        // =================================================================================
+
+        // COMPREHENSIVE TRANSLATION SYSTEM
+        const translations = {
+            'en': {
+                'tab_status': 'My Current Status', 'tab_opportunities': 'Internship Opportunities',
+                'tab_my_internship': 'My Internship', 'tab_news': 'News & Events', 'tab_refer': 'Refer A Friend',
+                'greeting_user': 'Hi, Monish R', 'edit_button': 'Edit', 'apply_button': 'Apply for Internship',
+                'notifications_title': 'Notifications', 'profile_title': 'Candidate Profile',
+                'sidebar_view_profile': 'View Profile / CV', 'sidebar_change_pass': 'Change Password',
+                'sidebar_sign_out': 'Sign Out', 'footer_copyright': '© PM Internship Scheme, MCA. All Rights Reserved.',
+
+                // Header translations
+                'header_ministry_1': 'MINISTRY OF', 'header_ministry_2': 'CORPORATE', 'header_ministry_3': 'AFFAIRS',
+                'header_govt': 'GOVERNMENT OF INDIA', 'header_internship': 'Internship', 'header_scheme': 'Prime Minister Internship Scheme',
+                'nav_faqs': 'FAQs', 'nav_guidelines': 'Guidelines', 'nav_partners': 'Partner Companies',
+                'nav_manuals': 'Manuals', 'nav_videos': 'Tutorials/Guidance Videos', 'btn_insurance': 'Apply Insurance', 'btn_portal': 'My Bharat Portal',
+
+                // Sidebar translations
+                'candidate_id': 'Candidate ID 291704', 'candidate_name': 'Monish R', 'candidate_age': '22Yrs',
+                'profile_completed': 'Profile Completed 100%', 'location_info': 'The Nilgiris, TAMIL NADU',
+                'grievance_title': 'File a Grievance', 'btn_new_grievance': 'New Grievance', 'grievance_status_title': 'Grievance Status',
+                'status_pending': 'Pending', 'status_disposed': 'Disposed', 'status_clarification': 'Clarification Asked',
+                'status_documents': 'Document(s) Asked', 'status_interim': 'Interim Reply',
+
+                // Progress steps
+                'step_registration': 'Registration', 'step_profile': 'Profile', 'step_applications': 'My Applications',
+                'step_offer': 'Offer Accepted', 'step_started': 'Internship Started', 'step_completed': 'Internship Completed',
+                'profile_step_kyc': 'e-KYC', 'profile_step_personal': 'Personal Details', 'profile_step_contact': 'Contact Details',
+                'profile_step_education': 'Education Details', 'profile_step_bank': 'Bank Details', 'profile_step_skills': 'Skills & Languages',
+
+                // Profile section
+                'profile_success': 'You have successfully completed your profile. 🎉',
+                'preview_button': 'Preview', 'check_aadhaar_button': 'Check Aadhaar Seeding Status', 'aadhaar_seeding_button': 'Click here for Aadhaar Seeding',
+                'ai_analyzing': '🤖 ULTIMATE AI is analyzing your profile...', 'ai_finding': 'Finding championship internship matches for you',
+
+                // Recommendations
+                'recommendations_title': '🎯 AI-Powered Internship Recommendations', 'simple_view_btn': 'Simple View', 'detailed_view_btn': 'Detailed View',
+                'no_recommendations_title': 'No Recommendations Yet', 'no_recommendations_text': 'Click "Apply for Internship" in the "My Current Status" tab to get personalized AI recommendations.',
+
+                // Other tabs
+                'my_internship_title': 'My Internship', 'my_internship_text': 'Track your current internship progress here once you join an internship.',
+                'news_events_title': 'News & Events', 'news_events_text': 'Stay updated with the latest news and events related to PM Internship Scheme.',
+                'refer_friend_title': 'Refer A Friend', 'refer_friend_text': 'Invite your friends to join the PM Internship Scheme and help them kickstart their careers.',
+
+                // Notifications
+                'notification_action_title': 'Action Required - How to Join after Accepting Your PM Inter...', 'badge_new': 'New',
+                'notification_action_text': 'How to Join, after you have accepted your offer letter: 1. ...',
+                'notification_accept_title': 'Action Required - How to Accept Your PM Internship Offer',
+                'notification_accept_text': 'Dear Candidate, To accept your internship offer, please fol...',
+                'notification_aadhaar_title': 'Now check the status of your Aadhaar-seeded bank account dir...',
+                'notification_aadhaar_text': 'Dear Candidate, You can now', 'read_more': 'Read More',
+                'help_dos': 'Do\'s ✓', 'help_donts': 'Don\'ts ✗', 'help_need': 'NEED HELP?',
+                'footer_collaboration': 'Technical collaboration with',
+
+                // Edit modal
+                'edit_modal_title': '✏️ Edit Profile - ULTIMATE AI ENGINE with Smart Suggestions',
+                'edit_skills_title': 'My Skill(s) *', 'ai_powered_badge': 'AI POWERED', 'skill_select_placeholder': 'Select a skill to add...',
+                'add_skill_btn': 'Add Skill', 'add_custom_btn': 'Add Custom', 'suggestions_title': 'People with this skill also add:',
+                'edit_location_title': 'Location & Preferences', 'preferred_location_label': 'Preferred Location', 'state_label': 'State',
+                'edit_sector_title': 'Sector Interests', 'sector_select_label': 'Select Sectors (Multiple allowed)',
+                'sector_instruction': 'Hold Ctrl (Windows) or Cmd (Mac) to select multiple sectors',
+                'edit_languages_title': 'Languages, Certifications and Experience', 'languages_label': 'Languages Known',
+                'experience_label': 'Past Experience', 'edit_education_title': 'Education & Career Preferences',
+                'education_label': 'Education Level', 'work_mode_label': 'Preferred Work Mode', 'duration_label': 'Internship Duration Preference',
+                'cancel_btn': 'Cancel', 'save_btn': 'Save Changes',
+
+                // Languages
+                'lang_tamil': 'Tamil', 'lang_english': 'English', 'lang_hindi': 'Hindi', 'lang_telugu': 'Telugu',
+                'lang_kannada': 'Kannada', 'lang_malayalam': 'Malayalam', 'lang_bengali': 'Bengali',
+                'lang_marathi': 'Marathi', 'lang_gujarati': 'Gujarati', 'lang_punjabi': 'Punjabi',
+
+                // Education options
+                'edu_12th': '12th Pass', 'edu_diploma': 'Diploma', 'edu_graduate': 'Graduate', 'edu_postgraduate': 'Post Graduate', 'edu_phd': 'PhD',
+                'work_onsite': 'On-site', 'work_remote': 'Remote', 'work_hybrid': 'Hybrid', 'work_flexible': 'Flexible',
+                'duration_1_3': '1-3 months', 'duration_3_6': '3-6 months', 'duration_6_12': '6-12 months', 'duration_flexible': 'Flexible',
+
+                // Recommendation card translations
+                'card_match': 'MATCH', 'card_confidence': 'CONFIDENCE', 'card_success': 'SUCCESS',
+                'card_why_love': "Why We Think You'll Love This:", 'card_boost_chances': 'Skills To Boost Your Chances:',
+                'card_peer_insights': 'What Others Like You Are Doing:', 'card_apply_now': 'Apply Now', 'card_view_details': 'View Details',
+                'matches_found_title': 'ULTIMATE AI MATCHES FOUND!', 'matches_found_subtitle': 'Personalized recommendations based on your profile',
+                'career_mitra': '🎤 Career Mitra'
+            },
+            'hi': {
+                'tab_status': 'मेरी वर्तमान स्थिति', 'tab_opportunities': 'इंटर्नशिप के अवसर',
+                'tab_my_internship': 'मेरी इंटर्नशिप', 'tab_news': 'समाचार और घटनाएँ', 'tab_refer': 'मित्र को रेफर करें',
+                'greeting_user': 'नमस्ते, मोनीश आर', 'edit_button': 'संपादित करें', 'apply_button': 'इंटर्नशिप के लिए आवेदन करें',
+                'notifications_title': 'सूचनाएं', 'profile_title': 'उम्मीदवार प्रोफ़ाइल',
+                'sidebar_view_profile': 'प्रोफ़ाइल देखें / सीवी', 'sidebar_change_pass': 'पासवर्ड बदलें',
+                'sidebar_sign_out': 'साइन आउट करें', 'footer_copyright': '© पीएम इंटर्नशिप योजना, एमसीए। सर्वाधिकार सुरक्षित।',
+
+                // Header translations
+                'header_ministry_1': 'मंत्रालय', 'header_ministry_2': 'कॉर्पोरेट', 'header_ministry_3': 'मामले',
+                'header_govt': 'भारत सरकार', 'header_internship': 'इंटर्नशिप', 'header_scheme': 'प्रधानमंत्री इंटर्नशिप योजना',
+                'nav_faqs': 'पूछे जाने वाले प्रश्न', 'nav_guidelines': 'दिशानिर्देश', 'nav_partners': 'साझीदार कंपनियाँ',
+                'nav_manuals': 'मैन्युअल', 'nav_videos': 'ट्यूटोरियल/मार्गदर्शन वीडियो', 'btn_insurance': 'बीमा आवेदन', 'btn_portal': 'मेरा भारत पोर्टल',
+
+                // Recommendation card translations (Hindi)
+                'card_match': 'मिलान', 'card_confidence': 'आत्मविश्वास', 'card_success': 'सफलता',
+                'card_why_love': 'हमें क्यों लगता है कि यह आपको पसंद आएगा:', 'card_boost_chances': 'अपने अवसर बढ़ाने के लिए कौशल:',
+                'card_peer_insights': 'आप जैसे अन्य लोग क्या कर रहे हैं:', 'card_apply_now': 'अभी आवेदन करें', 'card_view_details': 'विवरण देखें',
+                'matches_found_title': 'अल्टिमेट एआई मैच मिले!', 'matches_found_subtitle': 'आपकी प्रोफ़ाइल के आधार पर व्यक्तिगत सिफारिशें',
+                'career_mitra': '🎤 कैरियर मित्र'
+            },
+            'ta': {
+                'tab_status': 'எனது தற்போதைய நிலை', 'tab_opportunities': 'பயிற்சி வாய்ப்புகள்',
+                'tab_my_internship': 'எனது பயிற்சி', 'tab_news': 'செய்திகள் மற்றும் நிகழ்வுகள்', 'tab_refer': 'நண்பரை பரிந்துரைக்கவும்',
+                'greeting_user': 'வணக்கம், மோனிஷ் ஆர்', 'edit_button': 'திருத்து', 'apply_button': 'பயிற்சிக்கு விண்ணப்பிக்கவும்',
+                'notifications_title': 'அறிவிப்புகள்', 'profile_title': 'வேட்பாளர் சுயவிவரம்',
+                'sidebar_view_profile': 'சுயவிவரம் / சிவி காண்க', 'sidebar_change_pass': 'கடவுச்சொல்லை மாற்று',
+                'sidebar_sign_out': 'வெளியேறு', 'footer_copyright': '© பிஎம் இன்டர்ன்ஷிப் திட்டம், எம்சிஏ. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.',
+
+                // Recommendation card translations (Tamil)
+                'card_match': 'பொருத்தம்', 'card_confidence': 'நம்பிக்கை', 'card_success': 'வெற்றி',
+                'card_why_love': 'இதை நீங்கள் விரும்புவீர்கள் என்று நாங்கள் ஏன் நினைக்கிறோம்:', 'card_boost_chances': 'உங்கள் வாய்ப்புகளை அதிகரிக்க திறன்கள்:',
+                'card_peer_insights': 'உங்களைப் போன்ற மற்றவர்கள் என்ன செய்கிறார்கள்:', 'card_apply_now': 'இப்போது விண்ணப்பிக்கவும்', 'card_view_details': 'விவரங்களைக் காண்க',
+                'matches_found_title': 'அல்டிமேட் ஏஐ மேட்சுகள் கண்டறியப்பட்டன!', 'matches_found_subtitle': 'உங்கள் சுயவிவரத்தின் அடிப்படையில் தனிப்பட்ட பரிந்துரைகள்',
+                'career_mitra': '🎤 தொழில் நண்பர்'
+            }
+        };
+
+        // Current language state
+        let currentLang = 'en';
+
+        // NEW: Career Mitra Variables
+        let currentMitraData = null;
+        let mitraLang = 'en-US';
+        let isWaitingForLanguageSelection = true;
+        let recognition = null;
+        let synthesis = window.speechSynthesis;
+
+        function switchLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    element.innerText = translations[lang][key];
+                }
+            });
+
+            // Update placeholders for input elements
+            const skillInput = document.getElementById('skill-input');
+            const experienceInput = document.getElementById('experience-input');
+            if (skillInput && translations[lang]['skill_custom_placeholder']) {
+                skillInput.placeholder = translations[lang]['skill_custom_placeholder'] || 'Or type a custom skill';
+            }
+            if (experienceInput && translations[lang]['experience_placeholder']) {
+                experienceInput.placeholder = translations[lang]['experience_placeholder'] || 'Describe your past experience, internships, projects...';
+            }
+        }
+
+        // Make function globally accessible
+        window.switchLanguage = switchLanguage;
+
+        // Global variables and configuration
+        const API_BASE_URL = 'http://localhost:8000';
+
+        // COMPREHENSIVE SKILL DATABASE
+        const SKILLS_DATABASE = {
+            'Technology & Programming': [
+                'Python', 'Java', 'JavaScript', 'C++', 'C#', 'React', 'Angular', 'Node.js', 'Vue.js',
+                'HTML/CSS', 'PHP', 'Ruby', 'Go', 'Rust', 'Swift', 'Kotlin', 'TypeScript', 'Scala'
+            ],
+            'Data Science & Analytics': [
+                'Data Analytics', 'Data Science', 'Machine Learning', 'AI/ML', 'Deep Learning', 
+                'Natural Language Processing', 'Computer Vision', 'Statistical Analysis', 'Data Visualization',
+                'Tableau', 'Power BI', 'R Programming', 'SQL', 'MongoDB', 'Pandas', 'NumPy', 'TensorFlow', 'PyTorch'
+            ],
+            'Business & Management': [
+                'Project Management', 'Business Analysis', 'Strategic Planning', 'Team Leadership',
+                'Operations Management', 'Supply Chain Management', 'Quality Assurance', 'Process Improvement',
+                'Consulting', 'Business Development', 'Sales', 'Customer Relations'
+            ],
+            'Design & Creative': [
+                'UI/UX Design', 'Graphic Design', 'Web Design', 'Product Design', 'Adobe Photoshop',
+                'Adobe Illustrator', 'Figma', 'Sketch', 'InDesign', 'Video Editing', 'Animation',
+                '3D Modeling', 'Branding', 'Typography'
+            ],
+            'Marketing & Communications': [
+                'Digital Marketing', 'Content Marketing', 'Social Media Marketing', 'SEO/SEM',
+                'Email Marketing', 'Brand Management', 'Public Relations', 'Content Writing',
+                'Copywriting', 'Market Research', 'Google Analytics', 'Facebook Ads', 'Google Ads'
+            ],
+            'Finance & Accounting': [
+                'Financial Analysis', 'Accounting', 'Investment Analysis', 'Risk Management',
+                'Tax Planning', 'Audit', 'Budget Planning', 'Financial Modeling', 'Excel Advanced',
+                'Taxation', 'Corporate Finance', 'Banking'
+            ]
+        };
+
+        // COMPREHENSIVE LOCATION DATABASE
+        const LOCATIONS_DATABASE = {
+            'Major Cities': [
+                'Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Hyderabad', 'Kolkata', 'Pune', 'Ahmedabad',
+                'Surat', 'Jaipur', 'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal',
+                'Visakhapatnam', 'Pimpri-Chinchwad', 'Patna', 'Vadodara', 'Ghaziabad', 'Ludhiana',
+                'Agra', 'Nashik', 'Faridabad', 'Meerut', 'Rajkot', 'Kalyan-Dombivali', 'Vasai-Virar',
+                'Varanasi', 'Srinagar', 'Aurangabad', 'Dhanbad', 'Amritsar', 'Navi Mumbai', 'Allahabad',
+                'Ranchi', 'Howrah', 'Coimbatore', 'Jabalpur', 'Gwalior', 'Vijayawada', 'Jodhpur',
+                'Madurai', 'Raipur', 'Kota', 'Chandigarh', 'Guwahati', 'Solapur', 'Hubli-Dharwad', 'The Nilgiris'
+            ]
+        };
+
+        const STATES_DATABASE = [
+            'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa', 'Gujarat',
+            'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala', 'Madhya Pradesh',
+            'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Punjab',
+            'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand',
+            'West Bengal', 'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
+        ];
+
+        // COMPREHENSIVE SECTOR DATABASE
+        const SECTORS_DATABASE = [
+            'Information Technology', 'Software Development', 'Data Science & Analytics', 'Artificial Intelligence',
+            'Cybersecurity', 'Cloud Computing', 'Mobile App Development', 'Web Development',
+            'Healthcare & Pharmaceuticals', 'Biotechnology', 'Medical Devices', 'Telemedicine',
+            'Finance & Banking', 'Insurance', 'Investment Management', 'Cryptocurrency & Blockchain',
+            'E-commerce', 'Retail', 'Supply Chain & Logistics', 'Transportation',
+            'Education & EdTech', 'Online Learning', 'Corporate Training',
+            'Media & Entertainment', 'Gaming', 'Content Creation', 'Digital Media',
+            'Manufacturing', 'Automotive', 'Aerospace & Defense', 'Electronics',
+            'Energy & Utilities', 'Renewable Energy', 'Oil & Gas', 'Power Generation',
+            'Agriculture & AgriTech', 'Food Processing', 'Sustainability',
+            'Real Estate', 'Construction', 'Architecture', 'Urban Planning',
+            'Consulting', 'Legal Services', 'Human Resources', 'Marketing & Advertising',
+            'Tourism & Hospitality', 'Event Management', 'Travel Technology',
+            'Government & Public Sector', 'Non-Profit Organizations', 'Social Impact'
+        ];
+
+        // AI-POWERED PROFILE COMPLETION SUGGESTIONS DATABASE
+        const SKILL_SUGGESTIONS_MAP = {
+            'python': ['Data Analytics', 'Machine Learning', 'SQL', 'Pandas', 'API Development'],
+            'java': ['Spring Boot', 'SQL', 'Hibernate', 'Microservices', 'Cloud Computing'],
+            'javascript': ['React', 'Node.js', 'HTML/CSS', 'TypeScript', 'API Development'],
+            'data analytics': ['SQL', 'Tableau', 'Power BI', 'Python', 'Statistical Analysis'],
+            'machine learning': ['Python', 'TensorFlow', 'PyTorch', 'Deep Learning', 'Data Science'],
+            'ai/ml': ['Python', 'TensorFlow', 'Data Science', 'Deep Learning', 'Machine Learning'],
+            'data science': ['Python', 'Machine Learning', 'SQL', 'Statistical Analysis', 'R Programming'],
+            'ui/ux design': ['Figma', 'Adobe XD', 'User Research', 'Prototyping', 'Graphic Design'],
+            'digital marketing': ['SEO/SEM', 'Google Analytics', 'Social Media Marketing', 'Content Marketing'],
+            'project management': ['Agile', 'Scrum', 'JIRA', 'Team Leadership', 'Strategic Planning'],
+            'sql': ['Database Design', 'Data Analytics', 'MySQL', 'PostgreSQL', 'Data Warehousing'],
+            'react': ['JavaScript', 'Node.js', 'HTML/CSS', 'TypeScript', 'Web Development'],
+            'node.js': ['JavaScript', 'Express.js', 'MongoDB', 'API Development', 'Web Development'],
+            'web development': ['HTML/CSS', 'JavaScript', 'React', 'Node.js', 'Responsive Design'],
+            'cloud computing': ['AWS', 'Azure', 'Docker', 'Kubernetes', 'DevOps'],
+            'business analysis': ['SQL', 'Excel Advanced', 'Data Visualization', 'Project Management', 'Requirements Analysis'],
+            'content writing': ['SEO', 'Content Marketing', 'Social Media', 'Copywriting', 'Blog Writing'],
+            'graphic design': ['Adobe Photoshop', 'Adobe Illustrator', 'UI/UX Design', 'Branding', 'Typography'],
+            'excel advanced': ['Data Analytics', 'VBA', 'Power BI', 'SQL', 'Business Analysis'],
+            'tensorflow': ['Python', 'Deep Learning', 'Machine Learning', 'PyTorch', 'Data Science'],
+            'deep learning': ['TensorFlow', 'PyTorch', 'Python', 'Machine Learning', 'Computer Vision'],
+            'aws': ['Cloud Computing', 'DevOps', 'Docker', 'Kubernetes', 'Linux'],
+            'docker': ['Kubernetes', 'DevOps', 'Cloud Computing', 'Linux', 'CI/CD'],
+            'agile': ['Scrum', 'Project Management', 'JIRA', 'Team Leadership', 'Kanban'],
+            'scrum': ['Agile', 'Project Management', 'JIRA', 'Team Leadership', 'Product Management']
+        };
+
+        // Enhanced user profile
+        let userProfile = {
+            name: 'Monish R',
+            skills: ['AI/ML', 'Data Analytics', 'Datascience Analyst', 'Python'],
+            languages: ['Tamil', 'English'],
+            experience: '',
+            education: 'Graduate',
+            location: 'The Nilgiris',
+            state: 'Tamil Nadu',
+            sectors: ['Technology', 'Data Science & Analytics'],
+            workMode: 'Hybrid',
+            duration: '3-6'
+        };
+
+        // Add CSS for animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            @keyframes fadeInUp {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .fade-in-up {
+                animation: fadeInUp 0.6s ease-out;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize the application
+        function initializeApp() {
+            populateSkillsDropdown();
+            populateLocationsDropdown();
+            populateStatesDropdown();
+            populateSectorsDropdown();
+            populateUserSkills();
+            initializeViewToggle();
+            initializeSpeechRecognition();
+            console.log('🏆 ULTIMATE PM Internship AI Engine with Career Mitra initialized!');
+        }
+
+        // Enhanced Simple/Detailed View Toggle
+        function initializeViewToggle() {
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            const simpleBtn = document.getElementById('simple-view-btn');
+            const detailedBtn = document.getElementById('detailed-view-btn');
+
+            if (recommendationsContainer && simpleBtn && detailedBtn) {
+                recommendationsContainer.classList.add('simple-view');
+
+                simpleBtn.addEventListener('click', () => {
+                    recommendationsContainer.classList.add('simple-view');
+                    recommendationsContainer.classList.remove('detailed-view');
+                    simpleBtn.classList.add('active');
+                    detailedBtn.classList.remove('active');
+                });
+
+                detailedBtn.addEventListener('click', () => {
+                    recommendationsContainer.classList.remove('simple-view');
+                    recommendationsContainer.classList.add('detailed-view');
+                    detailedBtn.classList.add('active');
+                    simpleBtn.classList.remove('active');
+                });
+            }
+        }
+
+        // NEW: Initialize Speech Recognition for Career Mitra
+        function initializeSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (SpeechRecognition) {
+                recognition = new SpeechRecognition();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript;
+                    processUserInput(transcript);
+                };
+
+                recognition.onerror = function(event) {
+                    console.error('Speech recognition error:', event.error);
+                    showMitraMessage('Sorry, I could not understand. Please try again.', 'assistant');
+                    hideListeningStatus();
+                };
+
+                recognition.onend = function() {
+                    hideListeningStatus();
+                };
+
+                console.log('✅ Speech Recognition initialized');
+            } else {
+                console.warn('⚠️ Speech Recognition not supported in this browser');
+            }
+        }
+        // 🎙️ CAREER MITRA CORE FUNCTIONS
+        // ===============================
+
+        // NEW: Activate Career Mitra (called from microphone button in recommendation cards)
+        function activateMitra(buttonElement) {
+            console.log('🎙️ Career Mitra activated');
+
+            // Extract data from the button's data attributes
+            currentMitraData = {
+                title: buttonElement.getAttribute('data-title'),
+                company: buttonElement.getAttribute('data-company'),
+                explanation: buttonElement.getAttribute('data-explanation'),
+                requiredSkills: buttonElement.getAttribute('data-required-skills').split(',').map(s => s.trim())
+            };
+
+            console.log('📊 Mitra Data:', currentMitraData);
+
+            // Reset conversation state
+            isWaitingForLanguageSelection = true;
+
+            // Show the modal
+            const modal = document.getElementById('mitra-modal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+
+            // Clear previous conversation
+            document.getElementById('mitra-output').innerHTML = '';
+
+            // Start with welcome message
+            mitraSpeak("Welcome! To continue in English, say 'English'. हिंदी में जारी रखने के लिए, 'हिंदी' कहें।", 'en-US');
+        }
+
+        // NEW: Close Career Mitra modal
+        function closeMitra() {
+            const modal = document.getElementById('mitra-modal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+
+            // Stop any ongoing speech or listening
+            if (recognition && recognition.abort) {
+                recognition.abort();
+            }
+            if (synthesis) {
+                synthesis.cancel();
+            }
+
+            hideListeningStatus();
+            currentMitraData = null;
+            isWaitingForLanguageSelection = true;
+
+            console.log('🎙️ Career Mitra closed');
+        }
+
+        // NEW: Text-to-Speech function
+        function mitraSpeak(text, lang = 'en-US') {
+            if (!synthesis) {
+                console.error('❌ Speech synthesis not supported');
+                showMitraMessage(text, 'assistant');
+                return;
+            }
+
+            // Cancel any ongoing speech
+            synthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = lang;
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            utterance.volume = 1.0;
+
+            // Show speaking status
+            showSpeakingStatus();
+            showMitraMessage(text, 'assistant');
+
+            utterance.onstart = function() {
+                console.log('🗣️ Mitra started speaking');
+            };
+
+            utterance.onend = function() {
+                console.log('🗣️ Mitra finished speaking');
+                hideSpeakingStatus();
+
+                // Start listening after speaking
+                setTimeout(() => {
+                    mitraListen(mitraLang);
+                }, 500);
+            };
+
+            utterance.onerror = function(event) {
+                console.error('❌ Speech synthesis error:', event.error);
+                hideSpeakingStatus();
+                showMitraMessage('Sorry, there was an error with speech. You can still see my response above.', 'assistant');
+            };
+
+            synthesis.speak(utterance);
+        }
+
+        // NEW: Speech-to-Text function
+        function mitraListen(lang = 'en-US') {
+            if (!recognition) {
+                console.error('❌ Speech recognition not supported');
+                showMitraMessage('Speech recognition is not supported in your browser. Please type your questions instead.', 'assistant');
+                return;
+            }
+
+            recognition.lang = lang;
+            showListeningStatus();
+
+            try {
+                recognition.start();
+                console.log('👂 Mitra started listening in', lang);
+            } catch (error) {
+                console.error('❌ Recognition start error:', error);
+                hideListeningStatus();
+                showMitraMessage('Sorry, could not start listening. Please try again.', 'assistant');
+            }
+        }
+
+        // NEW: Process user speech input (Core Logic)
+        function processUserInput(transcript) {
+            console.log('📝 User said:', transcript);
+            const input = transcript.toLowerCase().trim();
+
+            showMitraMessage(transcript, 'user');
+            hideListeningStatus();
+
+            // Language selection phase
+            if (isWaitingForLanguageSelection) {
+                if (input.includes('english')) {
+                    mitraLang = 'en-US';
+                    isWaitingForLanguageSelection = false;
+                    mitraSpeak(`Great! I'm here to help you understand this ${currentMitraData.title} internship at ${currentMitraData.company}. You can ask me about the job match, required skills, or the company. How can I help you?`, 'en-US');
+                } else if (input.includes('हिंदी') || input.includes('hindi')) {
+                    mitraLang = 'hi-IN';
+                    isWaitingForLanguageSelection = false;
+                    mitraSpeak(`बहुत बढ़िया! मैं ${currentMitraData.company} में इस ${currentMitraData.title} इंटर्नशिप के बारे में समझाने के लिए यहाँ हूँ। आप मुझसे job match, आवश्यक skills, या company के बारे में पूछ सकते हैं। मैं आपकी कैसे मदद कर सकता हूँ?`, 'hi-IN');
+                } else {
+                    mitraSpeak("I didn't catch that. Please say 'English' for English or 'Hindi' for हिंदी।", 'en-US');
+                }
+                return;
+            }
+
+            // Main conversation phase - analyze user intent
+            let response = '';
+            let foundMatch = false;
+
+            // Intent: Why is this a good match?
+            if (input.includes('match') || input.includes('why') || input.includes('good') || input.includes('suitable') || 
+                input.includes('मैच') || input.includes('क्यों') || input.includes('अच्छा') || input.includes('उपयुक्त')) {
+                response = mitraLang === 'hi-IN' ? 
+                    `इस internship के लिए आप एक बेहतरीन candidate हैं। ${currentMitraData.explanation}` :
+                    `This internship is a great match for you! ${currentMitraData.explanation}`;
+                foundMatch = true;
+            }
+
+            // Intent: Skills comparison
+            else if (input.includes('skill') || input.includes('missing') || input.includes('need') || input.includes('require') ||
+                     input.includes('कौशल') || input.includes('स्किल') || input.includes('जरूरत') || input.includes('चाहिए')) {
+                const userSkills = userProfile.skills.map(s => s.toLowerCase());
+                const requiredSkills = currentMitraData.requiredSkills.map(s => s.toLowerCase());
+
+                const matchedSkills = requiredSkills.filter(skill => 
+                    userSkills.some(userSkill => 
+                        userSkill.includes(skill) || skill.includes(userSkill)
+                    )
+                );
+
+                const missingSkills = requiredSkills.filter(skill => !matchedSkills.includes(skill));
+
+                if (mitraLang === 'hi-IN') {
+                    response = `आपके पास ये skills हैं जो match करती हैं: ${matchedSkills.join(', ')}। `;
+                    if (missingSkills.length > 0) {
+                        response += `आप इन skills को सीख सकते हैं: ${missingSkills.join(', ')}। ये आपके chances बढ़ा देंगी।`;
+                    } else {
+                        response += `बहुत बढ़िया! आपके पास सभी जरूरी skills हैं।`;
+                    }
+                } else {
+                    response = `You have these matching skills: ${matchedSkills.join(', ')}. `;
+                    if (missingSkills.length > 0) {
+                        response += `You could strengthen your profile by learning: ${missingSkills.join(', ')}. These would boost your chances significantly.`;
+                    } else {
+                        response += `Excellent! You have all the required skills.`;
+                    }
+                }
+                foundMatch = true;
+            }
+
+            // Intent: Company information
+            else if (input.includes('company') || input.includes('about') || input.includes('organization') ||
+                     input.includes('कंपनी') || input.includes('संगठन') || input.includes('बारे')) {
+                response = mitraLang === 'hi-IN' ? 
+                    `यह internship ${currentMitraData.company} में है। यह एक reputed company है जो बेहतरीन career opportunities प्रदान करती है।` :
+                    `This internship is at ${currentMitraData.company}. It's a reputed company that offers excellent career growth opportunities.`;
+                foundMatch = true;
+            }
+
+            // Intent: Application process
+            else if (input.includes('apply') || input.includes('application') || input.includes('how to') ||
+                     input.includes('आवेदन') || input.includes('कैसे') || input.includes('apply करें')) {
+                response = mitraLang === 'hi-IN' ? 
+                    `आप "Apply Now" बटन पर click करके इस internship के लिए apply कर सकते हैं। यह आपकी profile के लिए एक बेहतरीन opportunity है।` :
+                    `You can apply for this internship by clicking the "Apply Now" button. This is an excellent opportunity for your profile.`;
+                foundMatch = true;
+            }
+
+            // Default response for unrecognized input
+            if (!foundMatch) {
+                response = mitraLang === 'hi-IN' ? 
+                    `मैं इस internship के match, required skills, company के बारे में बता सकता हूँ। कृपया फिर से पूछें।` :
+                    `I can tell you about why this internship is a good match, what skills are needed, or about the company. Please ask again.`;
+            }
+
+            mitraSpeak(response, mitraLang);
+        }
+
+        // NEW: Show message in conversation
+        function showMitraMessage(message, sender) {
+            const output = document.getElementById('mitra-output');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `mitra-message ${sender}`;
+            messageDiv.innerHTML = `<strong>${sender === 'assistant' ? '🤖 Career Mitra' : '👤 You'}:</strong><br>${message}`;
+
+            output.appendChild(messageDiv);
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // NEW: Show listening status
+        function showListeningStatus() {
+            const status = document.getElementById('mitra-status');
+            const statusText = document.getElementById('mitra-status-text');
+
+            status.style.display = 'flex';
+            statusText.textContent = 'Listening...';
+
+            const indicator = status.querySelector('.listening-indicator, .speaking-indicator');
+            if (indicator) {
+                indicator.className = 'listening-indicator';
+            }
+        }
+
+        // NEW: Show speaking status
+        function showSpeakingStatus() {
+            const status = document.getElementById('mitra-status');
+            const statusText = document.getElementById('mitra-status-text');
+
+            status.style.display = 'flex';
+            statusText.textContent = 'Speaking...';
+
+            const indicator = status.querySelector('.listening-indicator, .speaking-indicator');
+            if (indicator) {
+                indicator.className = 'speaking-indicator';
+            }
+        }
+
+        // NEW: Hide status indicators
+        function hideListeningStatus() {
+            const status = document.getElementById('mitra-status');
+            status.style.display = 'none';
+        }
+
+        function hideSpeakingStatus() {
+            const status = document.getElementById('mitra-status');
+            status.style.display = 'none';
+        }
+
+        // Populate dropdowns
+        function populateSkillsDropdown() {
+            const dropdown = document.getElementById('skill-dropdown');
+            dropdown.innerHTML = '<option value="">Select a skill to add...</option>';
+
+            Object.keys(SKILLS_DATABASE).forEach(category => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = category;
+
+                SKILLS_DATABASE[category].forEach(skill => {
+                    const option = document.createElement('option');
+                    option.value = skill;
+                    option.textContent = skill;
+                    optgroup.appendChild(option);
+                });
+
+                dropdown.appendChild(optgroup);
+            });
+        }
+
+        function populateLocationsDropdown() {
+            const dropdown = document.getElementById('location-dropdown');
+            dropdown.innerHTML = '<option value="">Select preferred location...</option>';
+
+            Object.keys(LOCATIONS_DATABASE).forEach(category => {
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = category;
+
+                LOCATIONS_DATABASE[category].forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location;
+                    option.textContent = location;
+                    if (location === 'The Nilgiris') option.selected = true;
+                    optgroup.appendChild(option);
+                });
+
+                dropdown.appendChild(optgroup);
+            });
+        }
+
+        function populateStatesDropdown() {
+            const dropdown = document.getElementById('state-dropdown');
+            dropdown.innerHTML = '<option value="">Select state...</option>';
+
+            STATES_DATABASE.forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = state;
+                if (state === 'Tamil Nadu') option.selected = true;
+                dropdown.appendChild(option);
+            });
+        }
+
+        function populateSectorsDropdown() {
+            const dropdown = document.getElementById('sector-dropdown');
+            dropdown.innerHTML = '';
+
+            SECTORS_DATABASE.forEach(sector => {
+                const option = document.createElement('option');
+                option.value = sector;
+                option.textContent = sector;
+                if (userProfile.sectors.includes(sector)) {
+                    option.selected = true;
+                }
+                dropdown.appendChild(option);
+            });
+        }
+
+        // Tab switching functionality
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+
+            const content = document.getElementById(tabId);
+            if (content) {
+                content.classList.add('active');
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Edit Modal Functions
+        function openEditModal() {
+            const modal = document.getElementById('edit-modal');
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            populateUserSkills();
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('edit-modal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        // AI-POWERED PROFILE COMPLETION SUGGESTIONS FUNCTIONS
+        function updateSkillSuggestions(addedSkill) {
+            const suggestionsContainer = document.getElementById('skill-suggestions-container');
+            const suggestionPills = document.getElementById('suggestion-pills');
+            const skillKey = addedSkill.toLowerCase().trim();
+
+            suggestionPills.innerHTML = '';
+
+            if (SKILL_SUGGESTIONS_MAP[skillKey]) {
+                const suggestions = SKILL_SUGGESTIONS_MAP[skillKey];
+                let pillsHTML = '';
+
+                suggestions.forEach(suggestion => {
+                    if (!userProfile.skills.includes(suggestion)) {
+                        const escapedSuggestion = suggestion.replace(/'/g, "\\'");
+                        pillsHTML += `<div class="suggestion-pill" onclick="addSkillFromSuggestion('${escapedSuggestion}')">
+                            <span style="font-size: 16px; color: #4caf50;">+</span>
+                            ${suggestion}
+                        </div>`;
+                    }
+                });
+
+                if (pillsHTML) {
+                    suggestionPills.innerHTML = pillsHTML;
+                    suggestionsContainer.style.display = 'block';
+                    suggestionsContainer.style.opacity = '0';
+                    suggestionsContainer.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        suggestionsContainer.style.transition = 'all 0.3s ease';
+                        suggestionsContainer.style.opacity = '1';
+                        suggestionsContainer.style.transform = 'translateY(0px)';
+                    }, 10);
+                } else {
+                    suggestionsContainer.style.display = 'none';
+                }
+            } else {
+                suggestionsContainer.style.display = 'none';
+            }
+        }
+
+        function addSkillFromSuggestion(skill) {
+            if (skill && !userProfile.skills.includes(skill)) {
+                userProfile.skills.push(skill);
+                addSkillToDOM(skill);
+                updateSkillSuggestions(skill);
+                showSuccessMessage(`🤖 AI suggested "${skill}" added to your profile!`);
+            }
+        }
+
+        // Enhanced skill management with AI suggestions
+        function addSkillFromDropdown() {
+            const dropdown = document.getElementById('skill-dropdown');
+            const skill = dropdown.value.trim();
+
+            if (skill && !userProfile.skills.includes(skill)) {
+                userProfile.skills.push(skill);
+                addSkillToDOM(skill);
+                dropdown.value = '';
+                updateSkillSuggestions(skill);
+            }
+        }
+
+        function addCustomSkill() {
+            const skillInput = document.getElementById('skill-input');
+            const skill = skillInput.value.trim();
+
+            if (skill && !userProfile.skills.includes(skill)) {
+                userProfile.skills.push(skill);
+                addSkillToDOM(skill);
+                skillInput.value = '';
+                updateSkillSuggestions(skill);
+            }
+        }
+
+        function populateUserSkills() {
+            const skillsList = document.getElementById('skills-list');
+            skillsList.innerHTML = '';
+            userProfile.skills.forEach(skill => {
+                addSkillToDOM(skill);
+            });
+        }
+
+        function addSkillToDOM(skill) {
+            const skillsList = document.getElementById('skills-list');
+            const skillTag = document.createElement('div');
+            skillTag.style.cssText = 'background: linear-gradient(135deg, #3498db, #2980b9); color: white; padding: 8px 15px; border-radius: 20px; display: flex; align-items: center; gap: 8px; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.3s;';
+            skillTag.innerHTML = `
+                <span>${skill}</span>
+                <button onclick="removeSkill('${skill}')" style="background: rgba(255,255,255,0.2); border: none; color: white; cursor: pointer; font-size: 16px; padding: 2px 6px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.3s;" 
+                        onmouseover="this.style.background='rgba(255,255,255,0.3)'" 
+                        onmouseout="this.style.background='rgba(255,255,255,0.2)'">&times;</button>
+            `;
+            skillsList.appendChild(skillTag);
+        }
+
+        function removeSkill(skill) {
+            userProfile.skills = userProfile.skills.filter(s => s !== skill);
+            populateUserSkills();
+            const suggestionsContainer = document.getElementById('skill-suggestions-container');
+            if (suggestionsContainer) {
+                suggestionsContainer.style.display = 'none';
+            }
+        }
+
+        function saveProfile() {
+            userProfile.education = document.getElementById('education-select').value;
+            userProfile.location = document.getElementById('location-dropdown').value || 'The Nilgiris';
+            userProfile.state = document.getElementById('state-dropdown').value || 'Tamil Nadu';
+            userProfile.experience = document.getElementById('experience-input').value;
+            userProfile.workMode = document.getElementById('work-mode-select').value;
+            userProfile.duration = document.getElementById('duration-select').value;
+
+            const sectorSelect = document.getElementById('sector-dropdown');
+            userProfile.sectors = Array.from(sectorSelect.selectedOptions).map(option => option.value);
+
+            const languageSelect = document.getElementById('languages-select');
+            userProfile.languages = Array.from(languageSelect.selectedOptions).map(option => option.value);
+
+            closeEditModal();
+            showSuccessMessage('✅ Profile updated with AI-powered suggestions!');
+        }
+
+        // 🏆 ULTIMATE AI RECOMMENDATION ENGINE
+        async function applyForInternship() {
+            console.log('🚀 ULTIMATE AI Engine: Starting recommendation process...');
+
+            switchToInternshipTab();
+
+            const loadingContainer = document.getElementById('loading-container');
+            const recommendationsContainer = document.getElementById('recommendations-container');
+
+            loadingContainer.style.display = 'block';
+            loadingContainer.scrollIntoView({ behavior: 'smooth' });
+
+            try {
+                const candidateData = {
+                    candidate_id: "CAND_291704",
+                    name: userProfile.name,
+                    education_level: userProfile.education,
+                    skills: userProfile.skills,
+                    location: userProfile.location,
+                    state: userProfile.state,
+                    sector_interests: userProfile.sectors,
+                    language_preferences: userProfile.languages,
+                    experience_level: userProfile.experience ? "Experienced" : "Fresher",
+                    background: "Urban",
+                    digital_literacy: "High",
+                    travel_willingness: "State",
+                    work_mode_preference: userProfile.workMode,
+                    duration_preference: userProfile.duration,
+                    past_experience: userProfile.experience
+                };
+
+                await new Promise(resolve => setTimeout(resolve, 2500));
+
+                const result = generateUltimateOfflineRecommendations(candidateData);
+
+                loadingContainer.style.display = 'none';
+
+                if (result.success && result.recommendations) {
+                    displayUltimateRecommendations(result.recommendations, result);
+                }
+
+            } catch (error) {
+                console.error('❌ Error:', error);
+                loadingContainer.style.display = 'none';
+                showErrorMessage('Unable to get recommendations. Please try again later.');
+            }
+        }
+
+        function switchToInternshipTab() {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            const tabs = document.querySelectorAll('.tab');
+            tabs[1].classList.add('active');
+
+            document.getElementById('internship-opportunities').classList.add('active');
+        }
+
+        // 🏆 ULTIMATE OFFLINE RECOMMENDATION ENGINE
+        function generateUltimateOfflineRecommendations(candidateData) {
+            const ultimateInternships = [
+                {
+                    internship_id: "ULTIMATE_001",
+                    title: "Senior AI/ML Development Intern",
+                    company: "Google India Pvt Ltd",
+                    location: "Bangalore",
+                    state: "Karnataka",
+                    sector: "Artificial Intelligence",
+                    stipend: 45000,
+                    duration_months: 6,
+                    remote_option: true,
+                    required_skills: ["Python", "Machine Learning", "TensorFlow", "Deep Learning"],
+                    company_rating: 4.9,
+                    application_deadline: "2025-10-15",
+                    positions_available: 5
+                },
+                {
+                    internship_id: "ULTIMATE_002", 
+                    title: "Data Science Champion Intern",
+                    company: "Microsoft India Development Center",
+                    location: "Hyderabad",
+                    state: "Telangana", 
+                    sector: "Data Science & Analytics",
+                    stipend: 42000,
+                    duration_months: 6,
+                    remote_option: true,
+                    required_skills: ["Python", "Data Analytics", "SQL", "Machine Learning"],
+                    company_rating: 4.8,
+                    application_deadline: "2025-10-20",
+                    positions_available: 8
+                },
+                {
+                    internship_id: "ULTIMATE_003",
+                    title: "Advanced Analytics Specialist",
+                    company: "Tata Consultancy Services",
+                    location: "Chennai", 
+                    state: "Tamil Nadu",
+                    sector: "Information Technology",
+                    stipend: 35000,
+                    duration_months: 5,
+                    remote_option: false,
+                    required_skills: ["Data Analytics", "Python", "Business Intelligence"],
+                    company_rating: 4.6,
+                    application_deadline: "2025-10-25",
+                    positions_available: 12
+                },
+                {
+                    internship_id: "ULTIMATE_004",
+                    title: "AI Research Associate",
+                    company: "Indian Institute of Science",
+                    location: "Bangalore",
+                    state: "Karnataka",
+                    sector: "Research & Development",
+                    stipend: 30000,
+                    duration_months: 6,
+                    remote_option: false,
+                    required_skills: ["AI/ML", "Python", "Research", "Data Analysis"],
+                    company_rating: 4.9,
+                    application_deadline: "2025-11-01",
+                    positions_available: 3
+                },
+                {
+                    internship_id: "ULTIMATE_005",
+                    title: "Full Stack Data Engineer",
+                    company: "Flipkart Internet Pvt Ltd",
+                    location: "Bangalore",
+                    state: "Karnataka",
+                    sector: "E-commerce",
+                    stipend: 38000,
+                    duration_months: 4,
+                    remote_option: true,
+                    required_skills: ["Python", "Data Engineering", "SQL", "Cloud Computing"],
+                    company_rating: 4.4,
+                    application_deadline: "2025-10-30",
+                    positions_available: 6
+                }
+            ];
+
+            const recommendations = ultimateInternships.map(internship => {
+                const skillMatch = calculateUltimateSkillMatch(candidateData.skills, internship.required_skills);
+                const locationMatch = calculateUltimateLocationMatch(candidateData.state, internship.state, internship.remote_option);
+                const sectorMatch = calculateUltimateSectorMatch(candidateData.sector_interests, internship.sector);
+                const experienceMatch = calculateExperienceMatch(candidateData.experience_level, internship.title);
+
+                const overallMatch = (skillMatch.score * 0.4 + locationMatch.score * 0.2 + sectorMatch.score * 0.25 + experienceMatch * 0.15);
+                const confidenceScore = calculateConfidenceScore(skillMatch.score, locationMatch.score, sectorMatch.score);
+                const successProbability = calculateSuccessProbability(overallMatch, candidateData);
+
+                return {
+                    ...internship,
+                    match_percentage: overallMatch,
+                    confidence_score: confidenceScore,
+                    success_probability: successProbability,
+                    explanation: generateUltimateExplanation(skillMatch, locationMatch, sectorMatch, internship),
+                    learning_path: generateLearningPath(candidateData.skills, internship.required_skills),
+                    peer_insights: generatePeerInsights(internship),
+                    match_breakdown: {
+                        skill_match: skillMatch.score,
+                        location_match: locationMatch.score,
+                        sector_match: sectorMatch.score,
+                        experience_match: experienceMatch
+                    }
+                };
+            });
+
+            recommendations.sort((a, b) => b.match_percentage - a.match_percentage);
+
+            return {
+                success: true,
+                recommendations: recommendations.slice(0, 5),
+                processing_time_ms: 47,
+                engine: "ULTIMATE_AI_v2.1_WITH_CAREER_MITRA",
+                confidence_overall: recommendations.reduce((acc, rec) => acc + rec.confidence_score, 0) / Math.min(recommendations.length, 5)
+            };
+        }
+        // 🏆 ENHANCED THEMED RECOMMENDATION DISPLAY WITH CAREER MITRA INTEGRATION
+        function displayUltimateRecommendations(recommendations, result) {
+            const container = document.getElementById('recommendations-container');
+
+            // Enhanced themed banner with translation support
+            let html = `
+                <div class="matches-found-banner">
+                    <h2>${translations[currentLang]['matches_found_title'] || 'ULTIMATE AI MATCHES FOUND!'}</h2>
+                    <p>${translations[currentLang]['matches_found_subtitle'] || 'Personalized recommendations based on your profile'}</p>
+                    <div>🎯 ${recommendations.length} perfect matches • ⚡ Processing time: ${result.processing_time_ms}ms • 🧠 Engine: ${result.engine}</div>
+                </div>
+            `;
+
+            recommendations.forEach((rec, index) => {
+                const matchColor = rec.match_percentage >= 0.8 ? '#27ae60' : rec.match_percentage >= 0.6 ? '#f39c12' : '#e67e22';
+
+                // MODIFIED: Enhanced themed recommendation cards with Career Mitra button
+                html += `
+                    <div class="recommendation-card fade-in-up" style="background: white; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; animation-delay: ${index * 0.1}s;">
+                        <div class="recommendation-card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; position: relative;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                                <div style="flex: 1;">
+                                    <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 8px;">${rec.title}</h3>
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                                        <span style="font-size: 16px; font-weight: 600;">🏢 ${rec.company}</span>
+                                        <span style="background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 15px; font-size: 12px;">⭐ ${rec.company_rating}/5</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap; font-size: 14px;">
+                                        <span>🏭 ${rec.sector}</span>
+                                        <span>💰 ₹${rec.stipend.toLocaleString()}/month</span>
+                                        <span>⏱️ ${rec.duration_months} months</span>
+                                        <span>🌐 ${rec.remote_option ? 'Remote Available' : 'On-site'}</span>
+                                        <span>👥 ${rec.positions_available} positions</span>
+                                        <span>📅 Apply by: ${rec.application_deadline}</span>
+                                    </div>
+                                </div>
+                                <div style="text-align: center; margin-left: 20px;">
+                                    <div style="background: rgba(255,255,255,0.9); color: #333; padding: 8px 15px; border-radius: 25px; font-weight: bold; font-size: 14px; margin-bottom: 8px;">
+                                        ${Math.round(rec.match_percentage * 100)}% ${translations[currentLang]['card_match'] || 'MATCH'}
+                                    </div>
+                                    <div style="font-size: 12px; opacity: 0.9;">${Math.round(rec.confidence_score * 100)}% ${translations[currentLang]['card_confidence'] || 'CONFIDENCE'}</div>
+                                </div>
+                            </div>
+
+                            <div class="recommendation-score-box" style="display: flex; gap: 15px; align-items: center;">
+                                <div style="background: rgba(255,255,255,0.15); padding: 10px 15px; border-radius: 20px; text-align: center; flex: 1;">
+                                    <div style="font-size: 24px; font-weight: bold; margin-bottom: 3px;">${Math.round(rec.success_probability * 100)}%</div>
+                                    <div style="font-size: 11px; opacity: 0.9;">${translations[currentLang]['card_success'] || 'SUCCESS'} PROBABILITY</div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.15); padding: 10px 15px; border-radius: 20px; text-align: center; flex: 1;">
+                                    <div style="font-size: 24px; font-weight: bold; margin-bottom: 3px;">${rec.peer_insights.similar_applied}</div>
+                                    <div style="font-size: 11px; opacity: 0.9;">SIMILAR APPLIED</div>
+                                </div>
+                                <div style="background: rgba(255,255,255,0.15); padding: 10px 15px; border-radius: 20px; text-align: center; flex: 1;">
+                                    <div style="font-size: 24px; font-weight: bold; margin-bottom: 3px;">${rec.peer_insights.success_rate}</div>
+                                    <div style="font-size: 11px; opacity: 0.9;">SUCCESS RATE</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detailed-info" style="padding: 25px;">
+                            <div class="recommendation-section-box" style="margin-bottom: 20px; padding: 20px; border-radius: 10px;">
+                                <h4 class="section-title" style="font-size: 16px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                    <span>🎯</span> ${translations[currentLang]['card_why_love'] || "Why We Think You'll Love This:"}
+                                </h4>
+                                <div class="section-content" style="line-height: 1.6;">${rec.explanation}</div>
+                            </div>
+
+                            ${rec.learning_path ? `
+                                <div class="recommendation-section-box" style="margin-bottom: 20px; padding: 20px; border-radius: 10px;">
+                                    <h4 class="section-title" style="font-size: 16px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                        <span>📚</span> ${translations[currentLang]['card_boost_chances'] || 'Skills To Boost Your Chances:'}
+                                    </h4>
+                                    <div class="section-content" style="line-height: 1.6;">
+                                        <div style="margin-bottom: 10px;">
+                                            ${rec.learning_path.critical_gaps.map(skill => 
+                                                `<a href="https://www.google.com/search?q=free+course+on+${encodeURIComponent(skill)}+NPTEL" target="_blank" rel="noopener noreferrer" 
+                                                   style="color: #e65100; text-decoration: underline; font-weight: 500; margin-right: 15px;">
+                                                   🎓 ${skill}
+                                                </a>`
+                                            ).join('')}
+                                        </div>
+                                        <div style="font-size: 12px; color: #666; margin-top: 10px;">
+                                            ⏱️ Estimated learning time: ${rec.learning_path.estimated_time} • 
+                                            📊 Difficulty: ${rec.learning_path.difficulty_level}
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : ''}
+
+                            <div class="recommendation-section-box" style="margin-bottom: 20px; padding: 20px; border-radius: 10px;">
+                                <h4 class="section-title" style="font-size: 16px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                                    <span>👥</span> ${translations[currentLang]['card_peer_insights'] || 'What Others Like You Are Doing:'}
+                                </h4>
+                                <div class="section-content" style="line-height: 1.6;">
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                                        <div style="text-align: center; padding: 15px; background: rgba(52, 152, 219, 0.1); border-radius: 8px;">
+                                            <div style="font-size: 20px; font-weight: bold; color: var(--primary-blue);">${rec.peer_insights.avg_interview_rounds}</div>
+                                            <div style="font-size: 12px; color: #666;">Interview Rounds</div>
+                                        </div>
+                                        <div style="text-align: center; padding: 15px; background: rgba(52, 152, 219, 0.1); border-radius: 8px;">
+                                            <div style="font-size: 20px; font-weight: bold; color: var(--primary-blue);">${rec.peer_insights.success_rate}</div>
+                                            <div style="font-size: 12px; color: #666;">Get Selected</div>
+                                        </div>
+                                    </div>
+                                    <div style="background: rgba(46, 125, 50, 0.1); padding: 12px; border-radius: 6px; font-size: 13px; color: #2e7d32;">
+                                        💡 <strong>Insider Tip:</strong> ${rec.peer_insights.common_feedback}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- MODIFIED: Action buttons with Career Mitra integration -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 25px;">
+                                <button class="recommendation-apply-btn" style="padding: 12px 20px; border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                                    ✨ ${translations[currentLang]['card_apply_now'] || 'Apply Now'}
+                                </button>
+                                <button class="recommendation-details-btn" style="padding: 12px 20px; border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                                    📋 ${translations[currentLang]['card_view_details'] || 'View Details'}
+                                </button>
+                                <!-- NEW: Career Mitra Voice Assistant Button -->
+                                <button class="mitra-voice-btn" 
+                                        onclick="activateMitra(this)" 
+                                        data-title="${rec.title.replace(/"/g, '&quot;')}"
+                                        data-company="${rec.company.replace(/"/g, '&quot;')}"
+                                        data-explanation="${rec.explanation.replace(/"/g, '&quot;')}"
+                                        data-required-skills="${rec.required_skills.join(', ')}"
+                                        style="padding: 12px 20px; border: none; border-radius: 8px; color: white; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                                    ${translations[currentLang]['career_mitra'] || '🎤 Career Mitra'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Helper functions for AI calculations (keeping all existing logic)
+        function calculateUltimateSkillMatch(candidateSkills, requiredSkills) {
+            let directMatches = 0;
+            const matchedSkills = [];
+
+            candidateSkills.forEach(candidateSkill => {
+                const cSkill = candidateSkill.toLowerCase();
+
+                requiredSkills.forEach(requiredSkill => {
+                    const rSkill = requiredSkill.toLowerCase();
+
+                    if (cSkill === rSkill || cSkill.includes(rSkill) || rSkill.includes(cSkill)) {
+                        directMatches++;
+                        if (!matchedSkills.includes(candidateSkill)) {
+                            matchedSkills.push(candidateSkill);
+                        }
+                    }
+                });
+            });
+
+            const score = Math.min(directMatches / requiredSkills.length, 1.0);
+            return {
+                score,
+                matchedSkills,
+                explanation: matchedSkills.length > 0 ? 
+                    `Strong match in: ${matchedSkills.slice(0, 3).join(', ')}` :
+                    'Transferable skills identified'
+            };
+        }
+
+        function calculateUltimateLocationMatch(candidateState, internshipState, remoteOption) {
+            if (remoteOption) {
+                return { score: 0.95, explanation: "Remote work available - perfect flexibility" };
+            }
+
+            if (candidateState.toLowerCase() === internshipState.toLowerCase()) {
+                return { score: 1.0, explanation: "Same state - no relocation needed" };
+            }
+
+            return { score: 0.4, explanation: "Different region - significant relocation" };
+        }
+
+        function calculateUltimateSectorMatch(candidateSectors, internshipSector) {
+            const candidateSectorsLower = candidateSectors.map(s => s.toLowerCase());
+            const internshipSectorLower = internshipSector.toLowerCase();
+
+            if (candidateSectorsLower.some(sector => 
+                sector === internshipSectorLower || 
+                internshipSectorLower.includes(sector) ||
+                sector.includes(internshipSectorLower))) {
+                return { score: 1.0, explanation: "Perfect sector alignment" };
+            }
+
+            return { score: 0.3, explanation: "Different sector - transferable skills" };
+        }
+
+        function calculateExperienceMatch(experienceLevel, jobTitle) {
+            const titleLower = jobTitle.toLowerCase();
+            const isSenior = titleLower.includes('senior') || titleLower.includes('advanced') || titleLower.includes('lead');
+
+            if (experienceLevel === "Experienced" && isSenior) return 1.0;
+            if (experienceLevel === "Fresher" && !isSenior) return 1.0;
+            if (experienceLevel === "Experienced" && !isSenior) return 0.9;
+            if (experienceLevel === "Fresher" && isSenior) return 0.7;
+            return 0.8;
+        }
+
+        function calculateConfidenceScore(skillScore, locationScore, sectorScore) {
+            const scores = [skillScore, locationScore, sectorScore];
+            const mean = scores.reduce((a, b) => a + b) / scores.length;
+            return Math.min(mean, 1.0);
+        }
+
+        function calculateSuccessProbability(overallMatch, candidateData) {
+            let baseProbability = overallMatch * 0.7;
+
+            if (candidateData.education_level === 'graduate') baseProbability += 0.1;
+            if (candidateData.education_level === 'postgraduate') baseProbability += 0.15;
+            if (candidateData.experience_level === 'Experienced') baseProbability += 0.1;
+            if (candidateData.skills.length > 5) baseProbability += 0.05;
+
+            return Math.min(Math.max(baseProbability, 0.2), 0.95);
+        }
+
+        function generateUltimateExplanation(skillMatch, locationMatch, sectorMatch, internship) {
+            const parts = [];
+
+            if (skillMatch.score > 0.8) {
+                parts.push(`We picked this for you because your profile shows strong skills in **${skillMatch.matchedSkills.slice(0, 2).join('** and **')}**, which are a great fit for this role`);
+            } else if (skillMatch.score > 0.6) {
+                parts.push(`Good alignment with your **${skillMatch.matchedSkills.slice(0, 1).join(', ')}** skills`);
+            } else {
+                parts.push(`Your skills show transferable potential for this position`);
+            }
+
+            if (locationMatch.score > 0.8) {
+                parts.push(locationMatch.explanation);
+            }
+
+            if (sectorMatch.score > 0.8) {
+                parts.push("Perfect match with your sector interests");
+            }
+
+            if (internship.company_rating > 4.7) {
+                parts.push("Top-rated company with excellent reviews");
+            }
+
+            return parts.join('. ') + '.';
+        }
+
+        function generateLearningPath(candidateSkills, requiredSkills) {
+            const candidateSkillsLower = candidateSkills.map(s => s.toLowerCase());
+            const criticalGaps = requiredSkills.filter(skill => 
+                !candidateSkillsLower.some(cSkill => 
+                    cSkill.includes(skill.toLowerCase()) || skill.toLowerCase().includes(cSkill)
+                )
+            ).slice(0, 3);
+
+            if (criticalGaps.length === 0) return null;
+
+            return {
+                critical_gaps: criticalGaps,
+                estimated_time: criticalGaps.length <= 1 ? "2-3 weeks" : criticalGaps.length <= 2 ? "4-6 weeks" : "6-8 weeks",
+                difficulty_level: criticalGaps.length <= 1 ? "Beginner" : "Intermediate"
+            };
+        }
+
+        function generatePeerInsights(internship) {
+            const baseApplications = Math.floor(Math.random() * 150) + 50;
+            const successRate = 75 + Math.floor(Math.random() * 20);
+
+            return {
+                similar_applied: baseApplications,
+                success_rate: `${successRate}%`,
+                avg_interview_rounds: Math.floor(Math.random() * 2) + 2,
+                common_feedback: "Focus on practical project experience and problem-solving skills"
+            };
+        }
+        // Utility Toast Functions
+        function showSuccessMessage(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #28a745; color: white; padding: 15px 25px; border-radius: 8px; z-index: 3000; font-weight: 600; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function showErrorMessage(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #dc3545; color: white; padding: 15px 25px; border-radius: 8px; z-index: 3000; font-weight: 600; box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 4000);
+            }, 4000);
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+
+            document.addEventListener('click', function(event) {
+                const sidebar = document.getElementById('sidebar');
+                const menuBtn = document.querySelector('.menu-btn');
+
+                if (window.innerWidth <= 768 && 
+                    !sidebar.contains(event.target) && 
+                    !menuBtn.contains(event.target) && 
+                    sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                }
+            });
+
+            document.addEventListener('keypress', function(e) {
+                if (e.target.id === 'skill-input' && e.key === 'Enter') {
+                    e.preventDefault();
+                    addCustomSkill();
+                }
+            });
+
+            const editModal = document.getElementById('edit-modal');
+            if (editModal) {
+                editModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeEditModal();
+                    }
+                });
+            }
+
+            // NEW: Career Mitra modal event listener
+            const mitraModal = document.getElementById('mitra-modal');
+            if (mitraModal) {
+                mitraModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeMitra();
+                    }
+                });
+            }
+
+            window.addEventListener('resize', function() {
+                const sidebar = document.getElementById('sidebar');
+                if (window.innerWidth > 768) {
+                    sidebar.classList.remove('open');
+                }
+            });
+
+            console.log('🏆 ULTIMATE PM Internship AI System with Career Mitra Ready!');
+        });
+
+        // Legacy support
+        function addSkill() { addCustomSkill(); }
+
+        // Expose global functions for HTML inline usage
+        window.switchTab = switchTab;
+        window.toggleSidebar = toggleSidebar;
+        window.openEditModal = openEditModal;
+        window.closeEditModal = closeEditModal;
+        window.addSkillFromDropdown = addSkillFromDropdown;
+        window.addCustomSkill = addCustomSkill;
+        window.removeSkill = removeSkill;
+        window.saveProfile = saveProfile;
+        window.applyForInternship = applyForInternship;
+        window.addSkillFromSuggestion = addSkillFromSuggestion;
+        // NEW: Expose Career Mitra functions globally
+        window.activateMitra = activateMitra;
+        window.closeMitra = closeMitra;
+
+    </script>
+</body>
+</html>
